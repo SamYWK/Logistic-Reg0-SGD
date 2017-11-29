@@ -55,16 +55,6 @@ def gradient_descent(X, y, alpha = .001, iters = 1000, eps=1e-4):
     
     plt.plot(loss.reshape(-1, 1))
     plt.show()
-    '''
-    #alpha = 0.0001
-    for i in range(10000):
-        y_hat = (1/(1 + numpy.exp(-1*(numpy.dot(X, theta)))))
-        theta = theta + alpha*(numpy.dot(X.T, (y - y_hat)) - 1)
-        square = numpy.square((y - y_hat))
-        loss = numpy.sum(square)
-    print(theta)
-    '''
-    
     return theta
 
 

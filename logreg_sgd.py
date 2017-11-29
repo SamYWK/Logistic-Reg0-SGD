@@ -29,24 +29,25 @@ def scale_features(X_train, X_test, low=0, upp=1):
     return X_train_scale, X_test_scale
 
 
-def s_gradient_descent(X, y, alpha = .001, iters = 100, eps=1e-4):
+def s_gradient_descent(X, y, alpha = .001, iters = 50, eps=1e-4):
     # TODO: fill this procedure as an exercise
     n, d = X.shape
     theta = numpy.zeros((d, 1))
     
-    loss = numpy.array([])
+    #loss = numpy.array([])
 
     for i in range(iters):
         for index in range(n):
             z = -(numpy.dot(X[index].reshape(1, 9), theta))
             exp128 = numpy.exp(z)
             y_hat = (1/(1 + exp128))
-            l = y[index].reshape(1, 1)*numpy.log10(y_hat) + (1 - y[index].reshape(1, 1))*numpy.log10(1 - y_hat)
+            #l = y[index].reshape(1, 1)*numpy.log10(y_hat) + (1 - y[index].reshape(1, 1))*numpy.log10(1 - y_hat)
             theta = theta + alpha * (numpy.dot( X[index].reshape(d, 1), (y[index].reshape(1, 1) - y_hat)) - 0.001)
-        loss = numpy.append(loss , (l / n))
-    
+        #loss = numpy.append(loss , (l / n))
+    '''
+    plt.figure(1)
     plt.plot(loss.reshape(-1, 1))
-    plt.show()
+    plt.show()'''
     return theta
 
 
@@ -58,9 +59,37 @@ def plot_ROC_curve(y_test, y_hat):
     ys = numpy.concatenate((y_test, y_hat), axis = 1)
     ys_df = pandas.DataFrame(data = ys, columns = ['y_test', 'y_hat'])
     ys_df_sort = (ys_df.sort_values(by=['y_hat'])).reset_index(drop =True)
-    print(ys_df_sort)
-    for i in range(size):
-        if(ys_df_sort.values)
+    
+    TPR_array = numpy.array([])
+    FPR_array = numpy.array([])
+    
+    for threshold in range(1, y_test.size):
+        TP = 0
+        FP = 0
+        TN = 0
+        FN = 0
+        
+        for index in range(threshold):
+            if(ys_df_sort.values[index, 0] == 0):
+                TN += 1
+            elif(ys_df_sort.values[index, 0] == 1):
+                FP += 1
+        for index in range(threshold, y_test.size):
+            if(ys_df_sort.values[index, 0] == 0):
+                FN += 1
+            elif(ys_df_sort.values[index, 0] == 1):
+                TP += 1
+        TPR = numpy.array([TP/(TP + FN)])
+        FPR = numpy.array([FP/(FP + TN)])
+        #print(TPR)
+        TPR_array = numpy.append(TPR_array, TPR)
+        FPR_array = numpy.append(FPR_array, FPR)
+    #print(TPR_array)
+    plt.figure(2)
+    plt.xlim(xmax = 1, xmin = 0)
+    plt.ylim(ymax = 1, ymin = 0)
+    plt.plot(FPR_array, TPR_array)
+    plt.show()
     return None
 
 def main():

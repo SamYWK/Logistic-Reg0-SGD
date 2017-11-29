@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Nov 24 16:24:42 2017
+Created on Wed Nov 29 12:09:16 2017
 
 @author: SamKao
 """
+
 import numpy
 import pandas
 import sklearn.metrics
@@ -15,9 +16,15 @@ import matplotlib.pyplot as plt
 
 def load_train_test_data(train_ratio=.8):
     data = pandas.read_csv('./HTRU_2.csv', header=None)
-    X = data.drop(data.columns[8], axis = 1)
+    print(data.head)
+    data = data.values
+    X = numpy.delete(data, 8, 1)
     X = numpy.concatenate((numpy.ones((len(X), 1)), X), axis = 1)
-    y = data.values[:, 8].reshape(-1, 1)
+    y = data[:, -1].reshape(-1, 1)
+    print(X)
+    print(X.shape)
+    print(y)
+    print(y.shape)
     
     return sklearn.model_selection.train_test_split(X, y, test_size = 1 - train_ratio, random_state=0)
 
@@ -29,7 +36,7 @@ def scale_features(X_train, X_test, low=0, upp=1):
     return X_train_scale, X_test_scale
 
 
-def gradient_descent(X, y, alpha = .001, iters = 1000, eps=1e-4):
+def gradient_descent(X, y, alpha = .001, iters = 100, eps=1e-4):
     # TODO: fill this procedure as an exercise
     n, d = X.shape
     theta = numpy.zeros((d, 1))
@@ -49,7 +56,7 @@ def gradient_descent(X, y, alpha = .001, iters = 1000, eps=1e-4):
             
             #print(loss[index])
             #print(loss.shape)
-            theta = theta + alpha * (numpy.dot( X[index].reshape(d, 1), (y[index].reshape(1, 1) - y_hat)) - 0.001)
+            theta = theta + alpha * (numpy.dot( X[index].reshape(d, 1), (y[index].reshape(1, 1) - y_hat)))
         loss = numpy.append(loss , (l / n))
         #print(loss / n)
     

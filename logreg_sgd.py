@@ -54,20 +54,26 @@ def predict(X, theta):
     return 1 / (1 + numpy.exp(-1*numpy.dot(X, theta)))
 
 
-def plot_ROC_curve():
-    
+def plot_ROC_curve(y_test, y_hat):
+    ys = numpy.concatenate((y_test, y_hat), axis = 1)
+    ys_df = pandas.DataFrame(data = ys, columns = ['y_test', 'y_hat'])
+    ys_df_sort = (ys_df.sort_values(by=['y_hat'])).reset_index(drop =True)
+    print(ys_df_sort)
+    for i in range(size):
+        if(ys_df_sort.values)
     return None
+
 def main():
     X_train, X_test, y_train, y_test = load_train_test_data(train_ratio=.8)
     X_train_scale, X_test_scale = scale_features(X_train, X_test, 0, 1)
     
     theta = s_gradient_descent(X_train_scale, y_train)
     
-    y_hat = predict(X_train_scale, theta)
-    print("Linear train R^2: %f" % (sklearn.metrics.r2_score(y_train, y_hat)))
+    #y_hat = predict(X_train_scale, theta)
+    #print("Linear train R^2: %f" % (sklearn.metrics.r2_score(y_train, y_hat)))
     y_hat = predict(X_test_scale, theta)
-    print("Linear test R^2: %f" % (sklearn.metrics.r2_score(y_test, y_hat)))
+    #print("Linear test R^2: %f" % (sklearn.metrics.r2_score(y_test, y_hat)))
     
-    plot_ROC_curve()
+    plot_ROC_curve(y_test, y_hat)
 
 main()

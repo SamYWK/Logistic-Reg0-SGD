@@ -87,7 +87,9 @@ def plot_ROC_curve(y_test, y_hat):
     #print(TPR_array)
     plt.figure(2)
     plt.xlim(xmax = 1, xmin = 0)
+    plt.xlabel('FPR')
     plt.ylim(ymax = 1, ymin = 0)
+    plt.ylabel('TPR')
     plt.plot(FPR_array, TPR_array)
     plt.show()
     return None

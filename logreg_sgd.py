@@ -29,7 +29,7 @@ def scale_features(X_train, X_test, low=0, upp=1):
     return X_train_scale, X_test_scale
 
 
-def s_gradient_descent(X, y, alpha = .001, iters = 50, eps=1e-4):
+def s_gradient_descent(X, y, alpha = .001, iters = 100, eps=1e-4):
     # TODO: fill this procedure as an exercise
     n, d = X.shape
     theta = numpy.zeros((d, 1))
@@ -62,33 +62,43 @@ def plot_ROC_curve(y_test, y_hat):
     
     TPR_array = numpy.array([])
     FPR_array = numpy.array([])
-    
-    for threshold in range(1, y_test.size):
+
+    for threshold in range(0, y_test.size):
         TP = 0
         FP = 0
         TN = 0
         FN = 0
+        TPR = 0
+        FPR = 0 
         
         for index in range(threshold):
             if(ys_df_sort.values[index, 0] == 0):
                 TN += 1
             elif(ys_df_sort.values[index, 0] == 1):
-                FP += 1
-        for index in range(threshold, y_test.size):
-            if(ys_df_sort.values[index, 0] == 0):
                 FN += 1
+        for index in range(threshold + 1, y_test.size):
+            if(ys_df_sort.values[index, 0] == 0):
+                FP += 1
             elif(ys_df_sort.values[index, 0] == 1):
                 TP += 1
-        TPR = numpy.array([TP/(TP + FN)])
-        FPR = numpy.array([FP/(FP + TN)])
-        #print(TPR)
+        
+        if ((TP + FN) == 0):
+            TPR = 0
+        elif ((FP + TN) == 0):
+            FPR = 0
+        else:    
+            TPR = TP/(TP + FN)
+            FPR = FP/(FP + TN)
+        print(TP, FP, TN, FN)
+        #print(TPR, FPR)
         TPR_array = numpy.append(TPR_array, TPR)
         FPR_array = numpy.append(FPR_array, FPR)
+    #print(TPR_array, FPR_array)
     #print(TPR_array)
     plt.figure(2)
-    plt.xlim(xmax = 1, xmin = 0)
+    #plt.xlim(xmax = 1, xmin = 0)
     plt.xlabel('FPR')
-    plt.ylim(ymax = 1, ymin = 0)
+    #plt.ylim(ymax = 1, ymin = 0)
     plt.ylabel('TPR')
     plt.plot(FPR_array, TPR_array)
     plt.show()
@@ -100,10 +110,10 @@ def main():
     
     theta = s_gradient_descent(X_train_scale, y_train)
     
-    #y_hat = predict(X_train_scale, theta)
-    #print("Linear train R^2: %f" % (sklearn.metrics.r2_score(y_train, y_hat)))
+    y_hat = predict(X_train_scale, theta)
+    print("Linear train R^2: %f" % (sklearn.metrics.r2_score(y_train, y_hat)))
     y_hat = predict(X_test_scale, theta)
-    #print("Linear test R^2: %f" % (sklearn.metrics.r2_score(y_test, y_hat)))
+    print("Linear test R^2: %f" % (sklearn.metrics.r2_score(y_test, y_hat)))
     
     plot_ROC_curve(y_test, y_hat)
 

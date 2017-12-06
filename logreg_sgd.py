@@ -84,7 +84,7 @@ def plot_ROC_curve(y_test, y_hat):
         else:    
             TPR = TP/(TP + FN)
             FPR = FP/(FP + TN)
-        print(TP, FP, TN, FN)
+            
         TPR_array = numpy.append(TPR_array, TPR)
         FPR_array = numpy.append(FPR_array, FPR)
     
@@ -105,6 +105,7 @@ def main():
     #test data
     y_hat = predict(X_test_scale, theta)
     #plot roc curve
+    print('Plotting ROC curve...This will take a long time.')
     plot_ROC_curve(y_test, y_hat)
 
 main()

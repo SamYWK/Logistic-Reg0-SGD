@@ -29,7 +29,7 @@ def scale_features(X_train, X_test, low=0, upp=1):
     return X_train_scale, X_test_scale
 
 
-def s_gradient_ascent(X, y, alpha = .001, iters = 100, eps=1e-4):
+def s_gradient_ascent(X, y, alpha = .001, iters = 50, eps=1e-4):
     # TODO: fill this procedure as an exercise
     n, d = X.shape
     theta = numpy.zeros((d, 1))
@@ -101,6 +101,7 @@ def main():
     X_train, X_test, y_train, y_test = load_train_test_data(train_ratio=.8)
     X_train_scale, X_test_scale = scale_features(X_train, X_test, 0, 1)
     #stochastic gradient ascent
+    print('Training data with stochastic gradient ascent...')
     theta = s_gradient_ascent(X_train_scale, y_train)
     #test data
     y_hat = predict(X_test_scale, theta)
